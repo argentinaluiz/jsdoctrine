@@ -1,0 +1,29 @@
+{
+    "name": "argentinaluiz/jsdoctrine",
+    "description": "Library to works with doctrine and fixtures",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "microframework",
+        "doctrine",
+        "data-fixtures"
+    ],
+    "authors": [
+        {
+            "name": "Luiz Carlos",
+            "email": "argentinaluiz@gmail.com",
+            "homepage": "https://github.com/argentinaluiz"
+        }
+    ],
+    "homepage": "https://github.com/argentinaluiz/jsdoctrine",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "doctrine/data-fixtures": "dev-master",
+        "doctrine/orm": ">=2.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "JS": "/"
+        }
+    }
+}
