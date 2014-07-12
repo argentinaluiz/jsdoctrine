@@ -7,7 +7,8 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 
-class LoadFixture {
+class LoadFixture
+{
 
     private $fixtures = [];
     private $entityManager;
@@ -15,30 +16,42 @@ class LoadFixture {
     /**
      * @var \Doctrine\Common\DataFixtures\Loader
      */
-    public $loader;
+    private $loader;
 
-    public function __construct(EntityManager $entityManager, $fixtures = []) {
+    /**
+     * @var \Doctrine\Common\DataFixtures\Executor\ORMExecutor
+     */
+    private $executor;
+
+    public function __construct(EntityManager $entityManager, $fixtures = [])
+    {
         $this->fixtures = $fixtures;
         $this->entityManager = $entityManager;
     }
 
-    public function loadEntities() {
-        if (!$this->loader) {
+    public function loadEntities()
+    {
+        if (!$this->executor)
+        {
             $load = new Loader();
-            if (count($this->fixtures) == 0) {
+            if (count($this->fixtures) == 0)
+            {
                 throw new \RuntimeException("Nenhuma fixture adicionada");
             }
 
-            foreach ($this->fixtures as $fixture) {
-                if (class_exists($fixture)) {
+            foreach ($this->fixtures as $fixture)
+            {
+                if (class_exists($fixture))
+                {
                     $load->addFixture(new $fixture);
-                } else {
+                } else
+                {
                     throw new \InvalidArgumentException(sprintf("Fixture %s não é uma fixture válida", $fixture));
                 }
             }
             $purger = new ORMPurger();
-            $executor = new ORMExecutor($this->entityManager, $purger);
-            $executor->execute($load->getFixtures());
+            $this->executor = new ORMExecutor($this->entityManager, $purger);
+            $this->executor->execute($load->getFixtures());
             $this->loader = $load;
         }
         return $this->loader;
@@ -47,13 +60,32 @@ class LoadFixture {
     /**
      * @return \Doctrine\Common\DataFixtures\AbstractFixture
      */
-    public function getFixture($className) {
+    public function getFixture($className)
+    {
         $this->loadEntities();
-        foreach ($this->loader->getFixtures() as $fixture) {
-            if ($fixture instanceof $className) {
+        foreach ($this->loader->getFixtures() as $fixture)
+        {
+            if ($fixture instanceof $className)
+            {
                 return $fixture;
             }
         }
+    }
+
+    public function get($reference)
+    {
+        $this->loadEntities();
+        $this->executor->getReferenceRepository()->getReference($reference);
+    }
+
+    public function getLoader()
+    {
+        return $this->loader;
+    }
+
+    public function getExecutor()
+    {
+        return $this->executor;
     }
 
 }
