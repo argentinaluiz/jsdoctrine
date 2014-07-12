@@ -75,7 +75,7 @@ class LoadFixture
     public function get($reference)
     {
         $this->loadEntities();
-        $this->executor->getReferenceRepository()->getReference($reference);
+        return $this->executor->getReferenceRepository()->getReference($reference);
     }
 
     public function getLoader()
